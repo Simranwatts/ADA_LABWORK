@@ -2,70 +2,37 @@ from typing import List
 
 class Sort:
 
-    # Merge Sort using Divide and Conquer
     def merge_sort(self, arr: List[int]) -> List[int]:
-
         if len(arr) <= 1:
-            return arr.copy()
+            return arr
 
         mid = len(arr) // 2
-
         left = self.merge_sort(arr[:mid])
         right = self.merge_sort(arr[mid:])
 
-        return self._merge(left, right)
-
-    # Merge two sorted arrays
-    def _merge(self, left: List[int],
-               right: List[int]) -> List[int]:
-
         result = []
-        i = j = 0
+        while left and right:
+            result.append(left.pop(0) if left[0] <= right[0]
+                          else right.pop(0))
 
-        while i < len(left) and j < len(right):
+        return result + left + right
 
-            if left[i] <= right[j]:
-                result.append(left[i])
-                i += 1
-            else:
-                result.append(right[j])
-                j += 1
-
-        result.extend(left[i:])
-        result.extend(right[j:])
-
-        return result
-
-    # Quick Sort using Divide and Conquer
     def quick_sort(self, arr: List[int]) -> List[int]:
-
         if len(arr) <= 1:
-            return arr.copy()
+            return arr
 
-        pivot = arr[len(arr) // 2]
+        pivot = arr[0]
+        left = [x for x in arr[1:] if x <= pivot]
+        right = [x for x in arr[1:] if x > pivot]
 
-        left = [x for x in arr if x < pivot]
-        middle = [x for x in arr if x == pivot]
-        right = [x for x in arr if x > pivot]
-
-        return (self.quick_sort(left)
-                + middle
-                + self.quick_sort(right))
+        return self.quick_sort(left) + [pivot] + self.quick_sort(right)
 
 
 # Driver Code
-if __name__ == "__main__":
+arr = list(map(int, input("Enter unsorted integers: ").split()))
 
-    arr = list(map(int, input(
-        "Enter unsorted integers: "
-    ).split()))
+s = Sort()
 
-    sorter = Sort()
-
-    print("Original array:", arr)
-
-    print("Merge Sort:",
-          sorter.merge_sort(arr))
-
-    print("Quick Sort:",
-          sorter.quick_sort(arr))
+print("Original array:", arr)
+print("Merge Sort:", s.merge_sort(arr.copy()))
+print("Quick Sort:", s.quick_sort(arr.copy()))
